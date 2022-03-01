@@ -1,10 +1,12 @@
 import numpy as np
 import torch
+from PIL import Image
 from transformations import normalize_01, re_normalize
 
 
-def preprocess_function(image_np: np.ndarray) -> torch.tensor:
+def preprocess_function(image: bytes) -> torch.tensor:
     # preprocessing
+    image_np = np.array(Image.open(image), dtype="uint8")
     img = np.moveaxis(image_np, -1, 0)  # from [H, W, C] to [C, H, W]
     img = normalize_01(img)  # linear scaling to range [0-1]
     img = np.expand_dims(img, axis=0)  # add batch dimension [B, C, H, W]
